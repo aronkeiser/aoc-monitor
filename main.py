@@ -107,10 +107,7 @@ def gen_msg(df, df_prior, year):
     else:
         # Check if there is a change in earned stars
         if sum(df_prior.Stars != df.Stars) == 0:
-
-            # Exit if there is no change
             message = 'No change'
-            # sys.exit()
         
         else:
             
@@ -145,16 +142,16 @@ def main():
     # Set event
     year = 2015
 
-    # # Fetch input data
-    # data = fetch_data(session_cookie, year)
+    # Fetch input data
+    data = fetch_data(session_cookie, year)
 
     # # Store the JSON data in a file
     # with open(f"leaderboard_{year}.json", "w") as file:
     #     json.dump(data, file)
 
-    # Retrieve JSON data from the file
-    with open(f"leaderboard_{year}.json", "r") as file:
-        data = json.load(file)
+    # # Retrieve JSON data from the file
+    # with open(f"leaderboard_{year}.json", "r") as file:
+    #     data = json.load(file)
 
     # Generate data frames
     df, df_prior = gen_dfs(data, year)
@@ -162,30 +159,35 @@ def main():
 
     # # Modify df for testing purposes
     # df.loc['NewMember'] = [25, 50]
-    df.iloc[0,0] = 100
-    # df.iloc[3,0] = 100
+    # df.iloc[0,0] = 30
+    # df.iloc[3,0] = 30
 
     # Generate message
     message = gen_msg(df, df_prior, year)
 
-    print(datetime.now(), message, sep='\n')
+    # Give feedback to terminal
+    print(f'\n{datetime.now()}', message, sep='\n')
 
-    # Send test message
-    h = int(datetime.now().strftime('%H'))
-    m = int(datetime.now().strftime('%M'))
-    print('sending message...')
-    pywhatkit.sendwhatmsg("+4917651995472", message=message, time_hour=h, time_min=m+1, tab_close=True)
-    print('message sent!')
+    # Send WhatsApp message for any change
+    if message != 'No change':
+        
+        # # Send test WhatsApp message
+        h = int(datetime.now().strftime('%H'))
+        m = int(datetime.now().strftime('%M'))
+        print('sending message...')
+        # pywhatkit.sendwhatmsg("+4917651995472", message=message, time_hour=h, time_min=m+1, tab_close=True)
+        pywhatkit.sendwhatmsg_to_group("Gcoef0k7uRy8rhtMNEqfKH", message=message, time_hour=h, time_min=m+1, tab_close=True)
+        print('message sent!')
 
-# Run main method
-if __name__ == '__main__':
 
-    # Set schedule
-    schedule.every(3).minutes.do(main)
+# # Run main method
+# if __name__ == '__main__':
+
+#     # Set schedule
+#     schedule.every(15).minutes.do(main)
     
-    # Run schedule
-    while True:
-        schedule.run_pending()
+#     # Run schedule
+#     while True:
+#         schedule.run_pending()
 
-# Send WhatsApp message
-# pywhatkit.sendwhatmsg_to_group_instantly("Gcoef0k7uRy8rhtMNEqfKH", message=message, tab_close=True)
+main()
