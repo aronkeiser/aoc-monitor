@@ -1,15 +1,15 @@
-from datetime import datetime
 import requests
-import json
 import pandas as pd
+import json
 import pywhatkit
 import schedule
+from datetime import datetime
 
 
-def fetch_data(session_cookie, year):
+def fetch_data(session_cookie, leaderboard_id, year):
 
     # Generate url
-    url = f'https://adventofcode.com/{year}/leaderboard/private/view/2097161.json'
+    url = f'https://adventofcode.com/{year}/leaderboard/private/view/{leaderboard_id}.json'
     
     # Generate header
     headers = {'Cookie': f'session={session_cookie}'}
@@ -65,14 +65,16 @@ def gen_dfs(data, year):
 def gen_msg(df, df_prior, year):
 
     # Build the message string
-    message = f'```MESSAGE FROM AOC MONITOR ({year})\n\n'
+    message = f'_Message from AOC Monitor ({year})_\n\n'
 
     # Get length of longest member name
     max_name = max([len(name) for name in df.index])
+    spaces_name_header = ' '*(max_name-4)
+    spaces_name_dash = '-'*(max_name-2)
 
     # Generate string to hold leaderboard information
-    leaderboard = str()
-
+    leaderboard = str(f'Name{spaces_name_header}Stars  Score\n'\
+                      f'{spaces_name_dash}  -----  -----\n')
 
     # Iterate over all members in df
     for member in df.sort_values('Score', ascending=False).index:
@@ -82,27 +84,22 @@ def gen_msg(df, df_prior, year):
 
         # Formatting: Generate number of spaces to align stars
         stars_member = df.loc[df.index == member, 'Stars'].values[0]
-        spaces_star = ' '
-        if stars_member < 10:
-            spaces_star = '  '
+        spaces_star = '    '[:-len(str(stars_member))]
 
         # Formatting: Generate number of spaces to align scores
         score_member = df.loc[df.index == member, 'Score'].values[0]
-        spaces_score = ' '
-        if score_member < 10:
-            spaces_score = '  '
+        spaces_score = '       '[:-len(str(score_member))]
         
         # Add information to leaderboard string
-        leaderboard = leaderboard + f'{member}:{spaces_name}'\
-                                    f'⭐{spaces_star}{stars_member}'\
-                                    f'{spaces_score}({score_member})\n'
-
+        leaderboard = leaderboard + f'{member}{spaces_name}'\
+                                    f'{spaces_star}{stars_member}'\
+                                    f'{spaces_score}{score_member}\n'
 
     # Check if number of memebers changed
     if len(df) != len(df_prior):
 
         # Complete message string
-        message = message + 'Number of members has changed!```'
+        message = message + 'Number of members has changed!'
 
     else:
         # Check if there is a change in earned stars
@@ -116,40 +113,49 @@ def gen_msg(df, df_prior, year):
             
                 # Determine how many stars have been earned
                 earned = (df.loc[df.index == member, 'Stars'].values[0] -
-                        df_prior.loc[df_prior.index == member, 'Stars'].values[0])
+                          df_prior.loc[df_prior.index == member, 'Stars'].values[0])
                 
                 # Account for correct writing
                 if abs(earned) == 1:
-                    word_star = 'star'
+                    word_spelling = 'star'
                 else:
-                    word_star = 'stars'
+                    word_spelling = 'stars'
                 
                 # Add member information to message string
-                message = message + f'Congratulations {member}!\n' \
-                                    f'You earned {earned} {word_star} ⭐\n\n'
+                message = message + f'Congratulations *{member}*!\n' \
+                                    f'You earned *{earned} {word_spelling}*.\n\n'
             
             # Add leaderboard to end of message
-            message = message + f'Current leaderboard:\n{leaderboard[:-1]}```'
+            message = message + f'Current leaderboard:\n\n```{leaderboard[:-1]}``` '
 
     return message
 
 
 def main():
 
-    # Set session cookie
-    session_cookie = open('session_cookie.txt').read()
+    # Load static data
+    static = pd.read_csv('static.csv', index_col=0)
+    
+    # # Set session cookie
+    session_cookie = static.loc['session_cookie'].values[0]
+
+    # Set WhatsApp group chat id
+    whatsapp_gc_id = static.loc['whatsapp_gc_id'].values[0]
+
+    # Set leaderboard id
+    leaderboard_id = static.loc['leaderboard_id'].values[0]
 
     # Set event
     year = 2015
 
     # Fetch input data
-    data = fetch_data(session_cookie, year)
+    data = fetch_data(session_cookie, leaderboard_id, year)
 
-    # # Store the JSON data in a file
+    # # Store the JSON data in a file (testing)
     # with open(f"leaderboard_{year}.json", "w") as file:
     #     json.dump(data, file)
 
-    # # Retrieve JSON data from the file
+    # # Retrieve JSON data from the file (testing)
     # with open(f"leaderboard_{year}.json", "r") as file:
     #     data = json.load(file)
 
@@ -157,10 +163,9 @@ def main():
     df, df_prior = gen_dfs(data, year)
     # df = gen_dfs(data, year)
 
-    # # Modify df for testing purposes
+    # # Modify df (testing)
     # df.loc['NewMember'] = [25, 50]
-    # df.iloc[0,0] = 30
-    # df.iloc[3,0] = 30
+    # df.iloc[0,0] = 11
 
     # Generate message
     message = gen_msg(df, df_prior, year)
@@ -171,23 +176,18 @@ def main():
     # Send WhatsApp message for any change
     if message != 'No change':
         
-        # # Send test WhatsApp message
-        h = int(datetime.now().strftime('%H'))
-        m = int(datetime.now().strftime('%M'))
-        print('sending message...')
-        # pywhatkit.sendwhatmsg("+4917651995472", message=message, time_hour=h, time_min=m+1, tab_close=True)
-        pywhatkit.sendwhatmsg_to_group("Gcoef0k7uRy8rhtMNEqfKH", message=message, time_hour=h, time_min=m+1, tab_close=True)
-        print('message sent!')
+        # Send test WhatsApp message
+        print('\nSending message...')
+        pywhatkit.sendwhatmsg_to_group_instantly(whatsapp_gc_id, message=message, tab_close=True)
+        print('Message sent!')
 
 
-# # Run main method
-# if __name__ == '__main__':
+# Run main method
+if __name__ == '__main__':
 
-#     # Set schedule
-#     schedule.every(15).minutes.do(main)
+    # Set schedule
+    schedule.every(15).minutes.do(main)
     
-#     # Run schedule
-#     while True:
-#         schedule.run_pending()
-
-main()
+    # Run schedule
+    while True:
+        schedule.run_pending()
