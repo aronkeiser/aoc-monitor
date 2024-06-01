@@ -77,7 +77,7 @@ def gen_msg(df, df_prior, year):
                       f'{spaces_name_dash}  -----  -----\n')
 
     # Iterate over all members in df
-    for member in df.sort_values('Score', ascending=False).index:
+    for member in df.sort_values(['Score','Stars'], ascending=[False, False]).index:
 
         # Formatting: Generate number of spaces to align names
         spaces_name = (max_name - len(member) + 1)*' '
@@ -170,16 +170,15 @@ def main():
     # Generate message
     message = gen_msg(df, df_prior, year)
 
-    # Give feedback to terminal
-    print(f'\n{datetime.now()}', message, sep='\n')
-
     # Send WhatsApp message for any change
     if message != 'No change':
         
         # Send test WhatsApp message
-        print('\nSending message...')
+        print(datetime.now(), 'Change detected!')
         pywhatkit.sendwhatmsg_to_group_instantly(whatsapp_gc_id, message=message, tab_close=True)
-        print('Message sent!')
+
+    else:
+        print(datetime.now(), 'No change')
 
 
 # Run main method
