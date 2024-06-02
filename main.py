@@ -54,12 +54,18 @@ def gen_dfs(data, year):
     df.sort_index(inplace=True)
 
     # Load prior data frame
-    df_prior = pd.read_csv(f"leaderboard_{year}.csv", index_col=0)
+    try:
+        e = 0
+        df_prior = pd.read_csv(f'leaderboards/leaderboard_{year}.csv', index_col=0)
+        return df, df_prior, e
 
+    # Return new df as prior if non-existent
+    except FileNotFoundError as e:
+        return df, df, e
+    
     # Override csv with current data
-    df.to_csv(f"leaderboard_{year}.csv", sep=',', header=True)
-
-    return df, df_prior
+    finally:
+        df.to_csv(f'leaderboards/leaderboard_{year}.csv', sep=',', header=True)
 
 
 def gen_msg(df, df_prior, year):
@@ -74,7 +80,7 @@ def gen_msg(df, df_prior, year):
 
     # Generate string to hold leaderboard information
     leaderboard = str(f'Name{spaces_name_header}Stars  Score\n'\
-                      f'{spaces_name_dash}  -----  -----\n')
+                      f'{spaces_name_dash}--------------\n')
 
     # Iterate over all members in df
     for member in df.sort_values(['Score','Stars'], ascending=[False, False]).index:
@@ -133,10 +139,10 @@ def gen_msg(df, df_prior, year):
 
 def main():
 
-    # Load static data
-    static = pd.read_csv('static.csv', index_col=0)
+    # Load connection details
+    static = pd.read_csv('connect.csv', index_col=0)
     
-    # # Set session cookie
+    # Set session cookie
     session_cookie = static.loc['session_cookie'].values[0]
 
     # Set WhatsApp group chat id
@@ -145,47 +151,55 @@ def main():
     # Set leaderboard id
     leaderboard_id = static.loc['leaderboard_id'].values[0]
 
-    # Set event
-    year = 2015
+    # Generate list of all available events
+    years = list(range(2015, datetime.today().year))
 
-    # Fetch input data
-    data = fetch_data(session_cookie, leaderboard_id, year)
+    if datetime.today().month == 12:
+        years.append(datetime.today().year)
 
-    # # Store the JSON data in a file (testing)
-    # with open(f"leaderboard_{year}.json", "w") as file:
-    #     json.dump(data, file)
+    # Iterate over each year
+    for year in years:
 
-    # # Retrieve JSON data from the file (testing)
-    # with open(f"leaderboard_{year}.json", "r") as file:
-    #     data = json.load(file)
+        # Fetch input data
+        data = fetch_data(session_cookie, leaderboard_id, year)
 
-    # Generate data frames
-    df, df_prior = gen_dfs(data, year)
-    # df = gen_dfs(data, year)
+        # # Store the JSON data in a file (testing)
+        # with open(f'leaderboards/leaderboard_{year}.json', "w") as file:
+        #     json.dump(data, file)
 
-    # # Modify df (testing)
-    # df.loc['NewMember'] = [25, 50]
-    # df.iloc[0,0] = 11
+        # # Retrieve JSON data from the file (testing)
+        # with open(f'leaderboards/leaderboard_{year}.json', "r") as file:
+        #     data = json.load(file)
 
-    # Generate message
-    message = gen_msg(df, df_prior, year)
+        # Generate data frames
+        df, df_prior, e = gen_dfs(data, year)
 
-    # Send WhatsApp message for any change
-    if message != 'No change':
+        # # Modify df (testing)
+        # df.loc['NewMember'] = [25, 50]
+        # df.iloc[0,0] = 10
+
+        # Generate message
+        message = gen_msg(df, df_prior, year)
+
+        # Feedback to terminal when new event is available
+        if (message == 'No change') & (e != 0):
+            print(datetime.now(), f'Generating new leaderboard ({year})')
         
-        # Send test WhatsApp message
-        print(datetime.now(), 'Change detected!')
-        pywhatkit.sendwhatmsg_to_group_instantly(whatsapp_gc_id, message=message, tab_close=True)
+        # Feedback to terminal if no change
+        elif message == 'No change':
+            print(datetime.now(), f'No change ({year})')
 
-    else:
-        print(datetime.now(), 'No change')
+        # Send WhatsApp message for any change
+        else:
+            print(datetime.now(), f'Change detected! ({year})')
+            pywhatkit.sendwhatmsg_to_group_instantly(whatsapp_gc_id, message=message, tab_close=True)
 
 
 # Run main method
 if __name__ == '__main__':
 
     # Set schedule
-    schedule.every(15).minutes.do(main)
+    schedule.every(30).minutes.do(main)
     
     # Run schedule
     while True:
