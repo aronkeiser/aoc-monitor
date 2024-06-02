@@ -1,3 +1,8 @@
-*.csv
-*.txt
-*.json
+# Connection details
+connect.csv
+
+# Leaderboard data
+leaderboards/leaderboard_????.*
+
+# Logs for sent WhatsApp messages
+PyWhatKit_DB.txt
