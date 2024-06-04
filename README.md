@@ -8,7 +8,9 @@ Monitor an Advent of Code leaderboard continuously and report earned stars via W
 
 Every 30 minutes the program iterates over all available years (events) of a private leaderboard, fetches its data and compares it to previously fetched data, stored as csv files in `/leaderboards`. Any detected changes are being sent with [PyWhatKit](https://github.com/Ankit404butfound/PyWhatKit) to a specifiable WhatsApp group chat.
 
-<img align="middle" src="res/screenshot.example.jpg" width="250">
+<p align="center">
+<kbd><img width="250" src="res/screenshot.example.jpg"></kbd>
+</p>
 
 ## How to set up
 
