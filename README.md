@@ -1,6 +1,6 @@
 # Monitor for Advent of Code Leaderboards
 
-<kbd><img align = "right" width="250" src="res/screenshot.example.jpg"></kbd>
+<img align = "right" width="250" src="res/screenshot.example.jpg">
 
 Monitor an Advent of Code leaderboard continuously and report earned stars via WhatsApp.
 
