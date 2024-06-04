@@ -1,7 +1,5 @@
 # Monitor for Advent of Code Leaderboards
 
-<img align = "right" width="250" src="res/screenshot.example.jpg">
-
 Monitor an Advent of Code leaderboard continuously and report earned stars via WhatsApp.
 
 [Advent of Code](https://adventofcode.com/) is an Advent calendar made by [Eric Wastl](https://github.com/topaz) . It is made of small programming puzzles for a variety of skill sets and skill levels that can be solved in any programming language you like.
@@ -9,6 +7,9 @@ Monitor an Advent of Code leaderboard continuously and report earned stars via W
 ## How does it work?
 
 Every 30 minutes the program iterates over all available years (events) of a private leaderboard, fetches its data and compares it to previously fetched data, stored as csv files in `/leaderboards`. Any detected changes are being sent with [PyWhatKit](https://github.com/Ankit404butfound/PyWhatKit) to a specifiable WhatsApp group chat.
+Example:
+
+<kbd><img width="275" src="res/screenshot.example.jpg" ></kbd>
 
 ## How to set up
 
