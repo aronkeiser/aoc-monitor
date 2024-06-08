@@ -157,6 +157,9 @@ def main():
     if datetime.today().month == 12:
         years.append(datetime.today().year)
 
+    # Set no change counter to 0
+    no_change = 0
+
     # Iterate over each year
     for year in years:
 
@@ -176,24 +179,29 @@ def main():
 
         # # Modify df (testing)
         # df.loc['NewMember'] = [25, 50]
-        # df.iloc[0,0] = 10
+        # df.iloc[0,0] = 13
 
         # Generate message
         message = gen_msg(df, df_prior, year)
 
         # Feedback to terminal when new event is available
         if (message == 'No change') & (e != 0):
-            print(datetime.now(), f'Generating new leaderboard ({year})')
+            print(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), f'Generating new leaderboard for {year}!')
         
         # Feedback to terminal if no change
         elif message == 'No change':
-            print(datetime.now(), f'No change ({year})')
-
+            # print(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), f'No change ({year})')
+            no_change += 1
+        
         # Send WhatsApp message for any change
         else:
-            print(datetime.now(), f'Change detected! ({year})')
+            print(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), f'Change detected in {year} leaderboard! Sending message...')
             pywhatkit.sendwhatmsg_to_group_instantly(whatsapp_gc_id, message=message, tab_close=True)
 
+    # If all years show now change, only send message once
+    if no_change == len(years):
+        print(datetime.now().strftime("%Y-%m-%d %H:%M:%S"),'No change')
+    
 
 # Run main method
 if __name__ == '__main__':
