@@ -190,13 +190,12 @@ def main():
         
         # Feedback to terminal if no change
         elif message == 'No change':
-            # print(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), f'No change ({year})')
             no_change += 1
         
         # Send WhatsApp message for any change
         else:
             print(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), f'Change detected in {year} leaderboard! Sending message...')
-            pywhatkit.sendwhatmsg_to_group_instantly(whatsapp_gc_id, message=message, tab_close=True)
+            pywhatkit.sendwhatmsg_to_group_instantly(whatsapp_gc_id, message=message, wait_time=30, tab_close=True)
 
     # If all years show now change, only send message once
     if no_change == len(years):
