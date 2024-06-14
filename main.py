@@ -178,7 +178,7 @@ def main():
     no_change = 0
 
     # Iterate over each year
-    for year in years:
+    for year in years[0]:
 
         # Fetch input data
         data = fetch_data(session_cookie, leaderboard_id, year)
@@ -196,7 +196,7 @@ def main():
 
         # # Modify df (testing)
         # df.loc['NewMember'] = [25, 50]
-        # df.iloc[0,0] = 13
+        df.iloc[0,0] = 13
 
         # Generate message
         message = gen_msg(df, df_prior, year)
