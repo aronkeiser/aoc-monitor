@@ -2,7 +2,7 @@ name: Run AOC Monitor
 
 on:
   schedule:
-    - cron: "*/3 * * * *"
+    - cron: "*/5 * * * *"
 
 jobs:
   build:
