@@ -178,7 +178,7 @@ def main():
     no_change = 0
 
     # Iterate over each year
-    for year in years[0]:
+    for year in [years[0]]:
 
         # Fetch input data
         data = fetch_data(session_cookie, leaderboard_id, year)
