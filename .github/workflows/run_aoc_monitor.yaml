@@ -24,4 +24,4 @@ jobs:
           SESSION_COOKIE: ${{ secrets.SESSION_COOKIE }}
           WHATSAPP_GC_ID: ${{ secrets.WHATSAPP_GC_ID }}
 
-        run: python main.py
+        run: python ./main.py
