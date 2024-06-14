@@ -16,7 +16,7 @@ jobs:
           node-version: 20
 
       - name: Install Dependencies
-        run: pip install -r requirements.txt
+        run: pip install -r ./requirements.txt
 
       - name: Run Python Script
         env:
