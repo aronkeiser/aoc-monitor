@@ -4,6 +4,7 @@ import json
 import pywhatkit
 import schedule
 from datetime import datetime
+import os
 
 
 def fetch_data(session_cookie, leaderboard_id, year):
@@ -139,17 +140,20 @@ def gen_msg(df, df_prior, year):
 
 def main():
 
-    # Load connection details
-    static = pd.read_csv('connect.csv', index_col=0)
+    # # Load connection details
+    # static = pd.read_csv('connect.csv', index_col=0)
     
     # Set session cookie
-    session_cookie = static.loc['session_cookie'].values[0]
+    # session_cookie = static.loc['session_cookie'].values[0]
+    session_cookie = os.environ.get('SESSION_COOKIE')
 
     # Set WhatsApp group chat id
-    whatsapp_gc_id = static.loc['whatsapp_gc_id'].values[0]
+    # whatsapp_gc_id = static.loc['whatsapp_gc_id'].values[0]
+    whatsapp_gc_id = os.environ.get('WHATSAPP_GC_ID')
 
     # Set leaderboard id
-    leaderboard_id = static.loc['leaderboard_id'].values[0]
+    # leaderboard_id = static.loc['leaderboard_id'].values[0]
+    leaderboard_id = os.environ.get('LEADERBOARD_ID')
 
     # Generate list of all available events
     years = list(range(2015, datetime.today().year))
