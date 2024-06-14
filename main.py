@@ -1,11 +1,18 @@
 import requests
 import pandas as pd
 import json
-import pywhatkit
 import schedule
 from datetime import datetime
 import os
+import sys
+import types
 
+# Create a mock module for pyautogui
+mock = types.ModuleType("pyautogui")
+sys.modules["pyautogui"] = mock
+
+# Now import pywhatkit after the mock is set up
+import pywhatkit
 
 def fetch_data(session_cookie, leaderboard_id, year):
 
