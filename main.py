@@ -219,12 +219,14 @@ def main():
         print(datetime.now().strftime("%Y-%m-%d %H:%M:%S"),'No change')
     
 
-# Run main method
-if __name__ == '__main__':
+# # Run main method
+# if __name__ == '__main__':
 
-    # Set schedule
-    schedule.every(30).minutes.do(main)
+#     # Set schedule
+#     schedule.every(30).minutes.do(main)
     
-    # Run schedule
-    while True:
-        schedule.run_pending()
+#     # Run schedule
+#     while True:
+#         schedule.run_pending()
+
+main()
