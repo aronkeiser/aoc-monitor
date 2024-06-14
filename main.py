@@ -9,6 +9,12 @@ import types
 
 # Create a mock module for pyautogui
 mock = types.ModuleType("pyautogui")
+mock.click = lambda *args, **kwargs: None
+mock.hotkey = lambda *args, **kwargs: None
+mock.press = lambda *args, **kwargs: None
+mock.size = lambda: (1920, 1080)  # Return a default screen size
+mock.typewrite = lambda *args, **kwargs: None
+
 sys.modules["pyautogui"] = mock
 
 # Now import pywhatkit after the mock is set up
