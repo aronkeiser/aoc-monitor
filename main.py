@@ -83,6 +83,7 @@ def gen_dfs(data, year):
     # Override csv with current data
     finally:
         df.to_csv(file_path, sep=',', header=True)
+        print(file_path)
 
 
 def gen_msg(df, df_prior, year):
