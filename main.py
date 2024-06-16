@@ -67,10 +67,13 @@ def gen_dfs(data, year):
     df.set_index('Name', inplace=True)
     df.sort_index(inplace=True)
 
+    # Get file path
+    file_path = os.path.join(os.getenv('GITHUB_WORKSPACE', ''), 'leaderboards', f'leaderboard_{year}.csv')
+    
     # Load prior data frame
     try:
         e = 0
-        df_prior = pd.read_csv(f'./leaderboards/leaderboard_{year}.csv', index_col=0)
+        df_prior = pd.read_csv(file_path, index_col=0)
         return df, df_prior, e
 
     # Return new df as prior if non-existent
@@ -79,7 +82,7 @@ def gen_dfs(data, year):
     
     # Override csv with current data
     finally:
-        df.to_csv(f'./leaderboards/leaderboard_{year}.csv', sep=',', header=True)
+        df.to_csv(file_path, sep=',', header=True)
 
 
 def gen_msg(df, df_prior, year):
