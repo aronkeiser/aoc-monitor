@@ -68,7 +68,7 @@ def gen_dfs(data, year):
     df.sort_index(inplace=True)
 
     file_path_test = os.path.join(os.getenv('GITHUB_WORKSPACE', ''), 'test.txt')
-    test = os.open(file_path_test).read()
+    test = os.open(file_path_test, 'r').read()
     print(test)
 
     # Get file path
