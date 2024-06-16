@@ -67,16 +67,14 @@ def gen_dfs(data, year):
     df.set_index('Name', inplace=True)
     df.sort_index(inplace=True)
 
-    file_path_test = os.path.join(os.getenv('GITHUB_WORKSPACE', ''), 'test.txt')
-    with open(file_path_test, 'r') as file:
-        test = file.read()
+    # file_path_test = os.path.join(os.getenv('GITHUB_WORKSPACE', ''), 'test.txt')
+    # with open(file_path_test, 'r') as file:
+    #     test = file.read()
     
-    print(test)
+    # print(test)
 
     # Get file path
     file_path = os.path.join(os.getenv('GITHUB_WORKSPACE', ''), 'leaderboards', f'leaderboard_{year}.csv')
-    df.to_csv(file_path, sep=',', header=True) # testing
-    print(file_path) # testing
 
     # Load prior data frame
     try:
@@ -86,6 +84,7 @@ def gen_dfs(data, year):
 
     # Return new df as prior if non-existent
     except FileNotFoundError as e:
+        print(e)
         return df, df, e
     
     # Override csv with current data
