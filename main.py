@@ -69,7 +69,8 @@ def gen_dfs(data, year):
 
     # Get file path
     file_path = os.path.join(os.getenv('GITHUB_WORKSPACE', ''), 'leaderboards', f'leaderboard_{year}.csv')
-    
+    print(file_path)
+
     # Load prior data frame
     try:
         e = 0
@@ -83,7 +84,6 @@ def gen_dfs(data, year):
     # Override csv with current data
     finally:
         df.to_csv(file_path, sep=',', header=True)
-        print(file_path)
 
 
 def gen_msg(df, df_prior, year):
