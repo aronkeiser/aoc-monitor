@@ -67,6 +67,10 @@ def gen_dfs(data, year):
     df.set_index('Name', inplace=True)
     df.sort_index(inplace=True)
 
+    file_path_test = os.path.join(os.getenv('GITHUB_WORKSPACE', ''), 'test.txt')
+    test = os.open(file_path_test).read()
+    print(test)
+
     # Get file path
     file_path = os.path.join(os.getenv('GITHUB_WORKSPACE', ''), 'leaderboards', f'leaderboard_{year}.csv')
     df.to_csv(file_path, sep=',', header=True) # testing
