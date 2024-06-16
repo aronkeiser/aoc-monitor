@@ -2,6 +2,10 @@ name: Run AOC Monitor
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+      - feature/*
   # schedule:
   #   - cron: "*/5 * * * *"
 
