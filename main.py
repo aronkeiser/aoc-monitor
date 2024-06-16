@@ -70,7 +70,7 @@ def gen_dfs(data, year):
     # Load prior data frame
     try:
         e = 0
-        df_prior = pd.read_csv(f'leaderboards/leaderboard_{year}.csv', index_col=0)
+        df_prior = pd.read_csv(f'./leaderboards/leaderboard_{year}.csv', index_col=0)
         return df, df_prior, e
 
     # Return new df as prior if non-existent
@@ -79,7 +79,7 @@ def gen_dfs(data, year):
     
     # Override csv with current data
     finally:
-        df.to_csv(f'leaderboards/leaderboard_{year}.csv', sep=',', header=True)
+        df.to_csv(f'./leaderboards/leaderboard_{year}.csv', sep=',', header=True)
 
 
 def gen_msg(df, df_prior, year):
