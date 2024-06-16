@@ -25,6 +25,10 @@ jobs:
       - name: Install Dependencies
         run: pip install -r ./requirements.txt
 
+      - name: Debug file path
+        run: |
+          echo "File path: ${{ github.workspace }}/leaderboards/leaderboard_2015.csv"
+
       - name: Run Python Script
         env:
           LEADERBOARD_ID: ${{ secrets.LEADERBOARD_ID }}
